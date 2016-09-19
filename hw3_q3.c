@@ -6,21 +6,21 @@
 
 int main(int argc, char *argv[]) {
 
-   int p_id;                     // Processor ID
-   int comm_size;                // Number of processors
-   double elapsed_time;          // Execution time
-   int n;                        // find prime from 2 to n
-   int low_index;                // start index of this process
-   int high_index;               // end index of this process
-   int size;                     // number of elements that a process holds
-   int proc0_size;               // array size of process 0
-   int *primes;                  // hold primes number in the end
-   int i;
-   int prime;                    // prime found so far, this is global variable
-   int current_index;            // index of current prime
-   int first;                    // first index to search
-   int local_min_prime;          // hold the minimum local prime
-   int global_max_distance = 0;      // hold the final result
+   int      p_id;                      // Processor ID
+   int      comm_size;                 // Number of processors
+   double   elapsed_time;              // Execution time
+   long     n;                         // find prime from 2 to n
+   long     low_index;                 // start index of this process
+   long     high_index;                // end index of this process
+   long     size;                      // number of elements that a process holds
+   long     proc0_size;                // array size of process 0
+   long     *primes;                   // hold primes number in the end
+   long     i;
+   long     prime;                     // prime found so far, this is global variable
+   long     current_index;             // index of current prime
+   long     first;                     // first index to search
+   long     local_min_prime;           // hold the minimum local prime
+   long     global_max_distance = 0;   // hold the final result
 
 
    MPI_Init(&argc, &argv);
@@ -51,24 +51,18 @@ int main(int argc, char *argv[]) {
 
    proc0_size = (n-1)/comm_size;
 
-   if ((2 + proc0_size) < (int) sqrt((double) n)) {
+   if ((2 + proc0_size) < (long) sqrt((double) n)) {
       if (p_id == 0) printf ("Too many processes\n");
       MPI_Finalize();
       exit (1);
    }
 
-   if (p_id == 21) {
-      printf("(%d) low_index: %d\n", p_id, low_index);
-      printf("(%d) high_index: %d\n", p_id, high_index);
-      printf("(%d) size: %d\n", p_id, size);      
-   }
-
-   // printf("(%d) low_index: %d\n", p_id, low_index);
-   // printf("(%d) high_index: %d\n", p_id, high_index);
-   // printf("(%d) size: %d\n", p_id, size);
+   // printf("(%d) low_index: %ld\n", p_id, low_index);
+   // printf("(%d) high_index: %ld\n", p_id, high_index);
+   // printf("(%d) size: %ld\n", p_id, size);
 
    // allocate memory for primes
-   primes = (int *) malloc((size + 1) * sizeof(int));
+   primes = (long *) malloc((size + 1) * sizeof(long));
 
    // // give primes array the number of its process
    for (i = 0; i < size; i++) primes[i] = low_index + i;
@@ -120,16 +114,16 @@ int main(int argc, char *argv[]) {
    // printf("%d last prime: %d\n", p_id, primes[size]);
 
    // find local_max distance
-   int local_max_distance = -1;       // hold the max distance in local
-   int last_prime = -1;
-   int current_prime = -1;
+   long local_max_distance = -1;       // hold the max distance in local
+   long last_prime = -1;
+   long current_prime = -1;
    for (i = 0; i <= size; i++) {
       if (primes[i]) {
          if (current_prime == -1) {
             current_prime = primes[i];
          } else {
             current_prime = primes[i];
-            int new_distance = current_prime - last_prime;
+            long new_distance = current_prime - last_prime;
             local_max_distance = new_distance > local_max_distance ? new_distance : local_max_distance;
          }
          last_prime = current_prime;
@@ -143,7 +137,7 @@ int main(int argc, char *argv[]) {
 
    elapsed_time += MPI_Wtime();
    if (p_id == 0) {
-      printf("Max distance between two consecutive prime numbers under %d is %d\n", n, global_max_distance);
+      printf("Max distance between two consecutive prime numbers under %ld is %ld\n", n, global_max_distance);
       printf("SIEVE(%d) %10.6f\n", comm_size, elapsed_time);
    }
 
