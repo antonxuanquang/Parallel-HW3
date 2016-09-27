@@ -108,13 +108,13 @@ int main(int argc, char *argv[]) {
    if (p_id != (comm_size - 1)) 
       MPI_Recv(&primes[size], 1, MPI_INT, p_id + 1, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 
-   // // mark out the primes[size] of last process
+   // mark out the primes[size] of last process
    if (p_id == comm_size - 1) primes[size] = 0;
 
    // printf("%d last prime: %d\n", p_id, primes[size]);
 
    // find local_max distance
-   long local_max_distance = -1;       // hold the max distance in local
+   long local_max_distance = -1;       // hold the max distance in local process
    long last_prime = -1;
    long current_prime = -1;
    for (i = 0; i <= size; i++) {
